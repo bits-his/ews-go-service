@@ -1,0 +1,3 @@
+[submodule "cygio"]
+	path = cygio
+	url = https://github.com/salemzii/cygio.git
