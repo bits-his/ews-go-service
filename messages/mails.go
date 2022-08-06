@@ -25,93 +25,94 @@ func SendMail(msg string, recipient []string) {
 	log.Println("Email Sent Successfully!")
 }
 
-func SendMails(msg string, recipients []string) {
+func SendMails(subject, msg string, recipients []string) {
+	mailwg.Add(len(recipients))
 	for _, v := range recipients {
-		if err := SendSSLMail(msg, v); err != nil {
-			log.Printf("Error sending mail %v", err)
-		}
+		go func(recipient string) {
+			defer mailwg.Done()
+			SendSSLMail(subject, msg, recipient)
+		}(v)
 	}
+	mailwg.Wait()
 }
 
-func SendSSLMail(msg string, recipient string) error {
-	from := mail.Address{Name: "", Address: From_mail}
+func SendSSLMail(subject, msg string, recipient string) {
 	to := mail.Address{Name: "", Address: recipient}
 
-	subj := "Test Mail"
-	body := msg
+	Mail_subject = subject
+	Mail_body = msg
 
+	container := NewContainer()
+	container.m.Lock()
 	// Setup headers
-	headers := make(map[string]string)
-	headers["From"] = from.String()
-	headers["To"] = to.String()
-	headers["Subject"] = subj
+	//headers = make(map[string]string)
+	container.Headers["From"] = from.String()
+	container.Headers["To"] = to.String()
+	container.Headers["Subject"] = Mail_subject
+	defer container.m.Unlock()
 
 	// Setup message
 	message := ""
-	for k, v := range headers {
+	for k, v := range container.Headers {
 		message += fmt.Sprintf("%s: %s\r\n", k, v)
 	}
-	message += "\r\n" + body
-
-	// Authentication.
-	auth := smtp.PlainAuth("", From_mail, Mail_password, SMTP_Host)
-
-	// TLS config
-	tlsconfig := &tls.Config{
-		InsecureSkipVerify: true,
-		ServerName:         SMTP_Host,
-	}
+	message += "\r\n" + Mail_body
 
 	conn, err := tls.Dial("tcp", fmt.Sprintf("%s:%d", SMTP_Host, 465), tlsconfig)
 	if err != nil {
 		log.Printf("Error sending mail %v", err)
-		return err
+		return
 	}
 
 	c, err := smtp.NewClient(conn, SMTP_Host)
 	if err != nil {
 		log.Printf("Error sending mail %v", err)
-		return err
+		return
 	}
 
 	// Auth
 	if err = c.Auth(auth); err != nil {
 		log.Printf("Error sending mail %v", err)
-		return err
+		return
 	}
 
 	// To && From
 	if err = c.Mail(from.Address); err != nil {
 		log.Printf("Error sending mail %v", err)
-		return err
+		return
 	}
 
 	if err = c.Rcpt(to.Address); err != nil {
 		log.Printf("Error sending mail %v", err)
-		return err
+		return
 	}
 
 	// Data
 	w, err := c.Data()
 	if err != nil {
 		log.Printf("Error sending mail %v", err)
-		return err
+		return
 	}
 
 	_, err = w.Write([]byte(message))
 	if err != nil {
 		log.Printf("Error sending mail %v", err)
-		return err
+		return
 	}
 
 	err = w.Close()
 	if err != nil {
 		log.Printf("Error sending mail %v", err)
-		return err
+		return
 	}
 
 	if err = c.Quit(); err != nil {
-		return err
+		return
 	}
-	return nil
+}
+
+func NewContainer() *Container {
+	return &Container{
+		Headers: make(map[string]string),
+	}
 }
