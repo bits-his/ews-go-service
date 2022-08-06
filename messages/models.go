@@ -4,9 +4,11 @@ import "os"
 
 var (
 	Sms_endpoint  = "https://www.bulksmsnigeria.com/api/v1/sms/create"
-	Api_token     = os.Getenv("SMS_TOKEN")
 	From          = "EWS"
-	Body          = ""
 	Gateway       = "0"
 	Append_sender = "EWS"
+	Api_token     = os.Getenv("SMS_TOKEN")
+	From_mail     = os.Getenv("FROM_MAIL")
+	Mail_password = os.Getenv("MAIL_PASSWORD")
+	SMTP_Host     = os.Getenv("HOST")
 )
