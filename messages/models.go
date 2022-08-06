@@ -8,5 +8,5 @@ var (
 	From          = "EWS"
 	Body          = ""
 	Gateway       = "0"
-	Append_sender = "0"
+	Append_sender = "EWS"
 )

@@ -17,9 +17,10 @@ func main() {
 		router.POST("/createalert", app.ReceiveAlert)
 
 		router.Run()
+		, "2348053503763","2347062942291"
 	*/
 	t1 := time.Now()
-	messages.SendSms("Hello from ews service", "2347014327332", "2348053503763", "2347062942291")
+	messages.SendSms("Hello salemzii", "2347014327332", "2348053503763")
 	t2 := time.Now()
 	log.Printf("Total time taken %v", t2.Sub(t1))
 }
