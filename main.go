@@ -1,19 +1,27 @@
 package main
 
 import (
+	"log"
+	"time"
+
 	"github.com/gin-gonic/gin"
-	"github.com/salemzii/cygio/app"
+	"github.com/salemzii/cygio/messages"
 )
 
 func main() {
 
-	router := gin.Default()
+	/*
+		router := gin.Default()
 
-	router.GET("/", welcome)
-	router.POST("/createalert", app.ReceiveAlert)
+		router.GET("/", welcome)
+		router.POST("/createalert", app.ReceiveAlert)
 
-	router.Run()
-
+		router.Run()
+	*/
+	t1 := time.Now()
+	messages.SendSms("Hello from ews service", "2347014327332", "2348053503763", "2347062942291")
+	t2 := time.Now()
+	log.Printf("Total time taken %v", t2.Sub(t1))
 }
 
 func welcome(c *gin.Context) {
