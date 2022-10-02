@@ -9,6 +9,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/salemzii/cygio/facebook"
+	"github.com/salemzii/cygio/messages"
 	"github.com/salemzii/cygio/twitter"
 )
 
@@ -25,7 +26,15 @@ func ReceiveAlert(c *gin.Context) {
 		log.Println(alert)
 	}
 	log.Println("Dispensing alerts to all listed platforms and urls")
-	defer CreateAlerts(alert)
+	//defer CreateAlerts(alert)
+
+	mails := []string{}
+
+	for _, v := range alert.Mails {
+		mails = append(mails, v.Address)
+	}
+
+	messages.SendMails(alert.Headline, alert.Body, mails)
 
 	c.JSON(200, gin.H{
 		"success": "Alerts distributed successfully",

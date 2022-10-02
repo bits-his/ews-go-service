@@ -38,10 +38,16 @@ var (
 )
 
 func init() {
-	from = &mail.Address{Name: "EWS", Address: From_mail}
+	from = &mail.Address{Name: "EWS-service", Address: From_mail}
 	auth = smtp.PlainAuth("", From_mail, Mail_password, SMTP_Host)
 	tlsconfig = &tls.Config{
 		InsecureSkipVerify: true,
 		ServerName:         SMTP_Host,
+	}
+}
+
+func NewContainer() *Container {
+	return &Container{
+		Headers: make(map[string]string),
 	}
 }

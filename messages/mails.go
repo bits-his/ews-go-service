@@ -17,7 +17,7 @@ func SendMail(msg string, recipient []string) {
 
 	fmt.Println(auth)
 	// Sending email.
-	if err := smtp.SendMail(fmt.Sprintf("%s:%d", SMTP_Host, 587), auth, From_mail, recipient, message); err != nil {
+	if err := smtp.SendMail(fmt.Sprintf("%s:%d", SMTP_Host, 465), auth, From_mail, recipient, message); err != nil {
 		log.Printf("Error sending mail %v", err)
 		return
 	}
@@ -108,11 +108,5 @@ func SendSSLMail(subject, msg string, recipient string) {
 
 	if err = c.Quit(); err != nil {
 		return
-	}
-}
-
-func NewContainer() *Container {
-	return &Container{
-		Headers: make(map[string]string),
 	}
 }

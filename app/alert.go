@@ -6,10 +6,15 @@ type Alert struct {
 	Body      string     `json:"body"`
 	Platforms []Platform `json:"platforms"`
 	Urls      []Url      `json:"urls"`
+	Mails     []Mail     `json:"mails"`
 }
 
 type Url struct {
 	Uri string `json:"uri"`
+}
+
+type Mail struct {
+	Address string `json:"email"`
 }
 
 type Media struct {
