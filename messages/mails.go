@@ -110,3 +110,12 @@ func SendSSLMail(subject, msg string, recipient string) {
 		return
 	}
 }
+
+/*
+	{
+		"headline":"hello",
+		"body": "hello body",
+		"platforms": [{"name":"facebook"}, {"name":"telegram"}],
+		"mails": [{"address":"salemododa2@gmail.com"}, {"address" :"robtyler0701@gmail.com"}]
+	}
+*/

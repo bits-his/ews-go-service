@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 )
 
 func SendMsg() {
@@ -36,7 +37,7 @@ func SendMsg() {
 
 	req.Header = http.Header{
 		"Content-Type":  []string{"application/json"},
-		"Authorization": []string{"Bearer EAAK3LCZBTUA4BAFUZAHsIuoEHQaK7ZBzESafL27gk2pS52T9AZBgTcGV19kxZCeuFBIKc4XJ076zBAof99VD3p6if2TU0LWfztpOuLK9ZAPKEkDEgfN6hljRJZAtvEAZC579SJK8aXL3CC6MDssasgHvAos8RIQfRm9myiZC7S38hFaSh0su888yDwReiOR12yUANeq3ow1ZB1uQZDZD"}, //[]string{os.Getenv("META_ACCESS_TOKEN")},
+		"Authorization": []string{os.Getenv("WHATSAPP_TOKEN")}, //[]string{os.Getenv("META_ACCESS_TOKEN")},
 	}
 
 	res, err := client.Do(req)

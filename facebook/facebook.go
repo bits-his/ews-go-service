@@ -24,7 +24,7 @@ func PagePost(text string) {
 	res, err := fb.Post("100624668732142/feed",
 		fb.Params{
 			"message":      text,
-			"access_token": os.Getenv("fb_pg_access"),
+			"access_token": os.Getenv("fb_access"),
 		},
 	)
 	if err != nil {

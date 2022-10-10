@@ -10,7 +10,7 @@ import (
 )
 
 var (
-	CHANNEL_NAME   = "@ews_chan"
+	CHANNEL_NAME   = "-1001847384984"
 	TELEGRAM_TOKEN = os.Getenv("TELEGRAM_TOKEN")
 	MESSAGE        = "Hello World"
 	ENDPOINT       = "https://api.telegram.org/bot"
@@ -58,6 +58,9 @@ func HelloWorld() {
 func SendChanMsg(text string) (ok bool, err error) {
 	url := fmt.Sprintf(ENDPOINT+"%s/sendMessage?chat_id=%s&text=%s",
 		TELEGRAM_TOKEN, CHANNEL_NAME, text)
+
+	log.Println(url)
+
 	var sendChaMsgResp SendChaMsgResp
 
 	resp, err := http.Get(url)
@@ -75,5 +78,6 @@ func SendChanMsg(text string) (ok bool, err error) {
 		log.Fatalf("Error %v", err)
 		return false, err
 	}
+	log.Println(sendChaMsgResp)
 	return sendChaMsgResp.Ok, nil
 }

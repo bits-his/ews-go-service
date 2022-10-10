@@ -52,6 +52,7 @@ func CreateAlerts(alert Alert) {
 	Urls := alert.Urls
 	text := alert.Body
 
+	log.Println(alert.Mails)
 	mails := []string{}
 
 	for _, v := range alert.Mails {
