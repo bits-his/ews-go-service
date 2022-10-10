@@ -16,8 +16,6 @@ type Message struct {
 	To                string `json:"to"`
 	Type              string `json:"type"`
 	Text              *Text  `json:"text"`
-	//Image             Image  `json:"image"`
-	//Template          Template `json:"template"`
 }
 
 type Text struct {

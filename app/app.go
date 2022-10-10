@@ -3,6 +3,7 @@ package app
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"sync"
@@ -10,6 +11,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/salemzii/cygio/facebook"
 	"github.com/salemzii/cygio/messages"
+	"github.com/salemzii/cygio/telegram"
 	"github.com/salemzii/cygio/twitter"
 )
 
@@ -25,6 +27,7 @@ func ReceiveAlert(c *gin.Context) {
 		c.BindJSON(&alert)
 		log.Println(alert)
 	}
+
 	log.Println("Dispensing alerts to all listed platforms and urls")
 	//defer CreateAlerts(alert)
 
@@ -33,6 +36,8 @@ func ReceiveAlert(c *gin.Context) {
 	for _, v := range alert.Mails {
 		mails = append(mails, v.Address)
 	}
+
+	fmt.Println(mails)
 
 	messages.SendMails(alert.Headline, alert.Body, mails)
 
@@ -46,6 +51,16 @@ func CreateAlerts(alert Alert) {
 	Platforms := alert.Platforms
 	Urls := alert.Urls
 	text := alert.Body
+
+	mails := []string{}
+
+	for _, v := range alert.Mails {
+		mails = append(mails, v.Address)
+	}
+
+	log.Println(mails)
+
+	messages.SendMails(alert.Headline, alert.Body, mails)
 
 	Wg.Add(len(Platforms))
 	for _, v := range Platforms {
@@ -65,6 +80,22 @@ func CreateAlerts(alert Alert) {
 				facebook.PagePost(text)
 			}(text)
 
+		case "telegram":
+			log.Println("Creating alert on telegram")
+			go func(text string) {
+				defer Wg.Done()
+				_, err := telegram.SendChanMsg(text)
+				if err != nil {
+					log.Printf("Error publishing to telegram channel: %v", err)
+				}
+			}(text)
+
+		case "whatsapp":
+			log.Println("Creating alert on whatsapp")
+			go func(text string) {
+				defer Wg.Done()
+				facebook.SendMsg()
+			}(text)
 		}
 	}
 

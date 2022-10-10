@@ -25,3 +25,7 @@ type Media struct {
 type Platform struct {
 	Name string `json:"name"`
 }
+
+func (alert Alert) Intf(str string) {
+
+}
