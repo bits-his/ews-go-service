@@ -62,20 +62,6 @@ func ConsumeAlerts() {
 				log.Fatalf("%v", err)
 			}
 			CreateAlerts(alert)
-			/*
-				numbers := []string{}
-				for _, v := range alert.Phones {
-					numbers = append(numbers, v.Number)
-				}
-				messages.SendBulkSms(alert.Body, numbers)
-
-				mails := []string{}
-
-				for _, v := range alert.Mails {
-					mails = append(mails, v.Address)
-				}
-				messages.SendMails(alert.Headline, alert.Body, mails)
-			*/
 		}
 	}()
 
