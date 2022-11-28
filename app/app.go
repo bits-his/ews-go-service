@@ -6,19 +6,135 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"sync"
 
 	"github.com/gin-gonic/gin"
 	"github.com/salemzii/cygio/facebook"
 	"github.com/salemzii/cygio/messages"
 	"github.com/salemzii/cygio/telegram"
-	"github.com/salemzii/cygio/twitter"
+	"github.com/streadway/amqp"
 )
 
 var (
 	Wg     sync.WaitGroup
 	Endpwg sync.WaitGroup
 )
+
+func ConsumeAlerts() {
+
+	log.Println("Consumer Application")
+	conn, err := amqp.Dial(os.Getenv("RABBITMQ_URL"))
+	if err != nil {
+		log.Fatalf("Error connecting to rabbitMq %v", err)
+	}
+	defer conn.Close()
+
+	fmt.Println("Successfully connected to rabbitmq")
+
+	ch, err := conn.Channel()
+	if err != nil {
+		log.Fatalf("Error creating channel %v", err)
+	}
+
+	defer ch.Close()
+
+	msgs, err := ch.Consume(
+		"alert_queue",
+		"",
+		true,
+		false,
+		false,
+		false,
+		nil,
+	)
+	if err != nil {
+		log.Fatalf("Error publishing queue %v", err)
+	}
+	forever := make(chan bool)
+
+	go func() {
+		for d := range msgs {
+			log.Println(string(d.Body))
+
+			var alert Alert
+			if err := json.Unmarshal(d.Body, &alert); err != nil {
+				log.Fatalf("%v", err)
+			}
+			CreateAlerts(alert)
+			/*
+				numbers := []string{}
+				for _, v := range alert.Phones {
+					numbers = append(numbers, v.Number)
+				}
+				messages.SendBulkSms(alert.Body, numbers)
+
+				mails := []string{}
+
+				for _, v := range alert.Mails {
+					mails = append(mails, v.Address)
+				}
+				messages.SendMails(alert.Headline, alert.Body, mails)
+			*/
+		}
+	}()
+
+	<-forever
+
+}
+
+func SendNewsletterMail() {
+
+	log.Println("Consumer Application")
+	conn, err := amqp.Dial(os.Getenv("RABBITMQ_URL"))
+	if err != nil {
+		log.Fatalf("Error connecting to rabbitMq %v", err)
+	}
+	defer conn.Close()
+
+	fmt.Println("Successfully connected to rabbitmq")
+
+	ch, err := conn.Channel()
+	if err != nil {
+		log.Fatalf("Error creating channel %v", err)
+	}
+
+	defer ch.Close()
+
+	msgs, err := ch.Consume(
+		"cipher",
+		"",
+		true,
+		false,
+		false,
+		false,
+		nil,
+	)
+	if err != nil {
+		log.Fatalf("Error publishing queue %v", err)
+	}
+	forever := make(chan bool)
+
+	go func() {
+		for d := range msgs {
+			log.Println(string(d.Body))
+
+			var subscriber struct {
+				Email string `json:"email"`
+			}
+
+			if err := json.Unmarshal(d.Body, &subscriber); err != nil {
+				log.Fatalf("%v", err)
+			}
+
+			messages.SendSSLMail("Drug Cipher Subscription",
+				"Hi you have successfully subscribed to drug cipher's newsletter, you will receive subsequent update about our products",
+				subscriber.Email)
+		}
+	}()
+
+	<-forever
+}
 
 func ReceiveAlert(c *gin.Context) {
 
@@ -54,14 +170,21 @@ func CreateAlerts(alert Alert) {
 
 	log.Println(alert.Mails)
 	mails := []string{}
+	numbers := []string{}
 
 	for _, v := range alert.Mails {
 		mails = append(mails, v.Address)
 	}
 
+	for _, v := range alert.Phones {
+		numbers = append(numbers, v.Number)
+	}
+
 	log.Println(mails)
+	log.Println(numbers)
 
 	messages.SendMails(alert.Headline, alert.Body, mails)
+	messages.SendBulkSms(alert.Body, numbers)
 
 	Wg.Add(len(Platforms))
 	for _, v := range Platforms {
@@ -69,10 +192,12 @@ func CreateAlerts(alert Alert) {
 
 		case "twitter":
 			log.Println("Creating alert on twitter")
-			go func(text string) {
-				defer Wg.Done()
-				twitter.CreateTweet(text)
-			}(text)
+			/*
+				go func(text string) {
+					defer Wg.Done()
+					twitter.CreateTweet(text)
+				}(text)
+			*/
 
 		case "facebook":
 			log.Println("Creating alert on facebook")

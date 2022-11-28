@@ -1,0 +1,33 @@
+{
+    "headline": "hello",
+    "body": "hello body",
+    "platforms": [
+        {
+            "name": "facebook"
+        }, 
+        {
+            "name": "twitter"
+        }, 
+        {"name":"telegram"}
+    ],
+    "urls": [
+        {
+            "uri": "www.mywebhook.app"
+        }
+    ],
+    "mails": [
+        {
+            "email": "salem@gmail.com"
+        }, {
+            "email": "abdullahi@gmail.com"
+        }
+     ],
+    "phones": [
+        {
+            "number": "08099999"
+        }, 
+        {
+            "number": "98-0030353"
+        }
+    ]
+}

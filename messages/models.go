@@ -14,9 +14,10 @@ var (
 	Gateway       = "0"
 	Append_sender = "EWS"
 	Api_token     = os.Getenv("SMS_TOKEN")
-	From_mail     = os.Getenv("FROM_MAIL")
-	Mail_password = os.Getenv("MAIL_PASSWORD")
-	SMTP_Host     = os.Getenv("HOST")
+
+	From_mail     = os.Getenv("EWS_MAIL")
+	Mail_password = os.Getenv("EWS_MAIL_PASSWORD")
+	SMTP_Host     = os.Getenv("EWS_MAIL_HOST")
 
 	ErrSendingSmsRequest = "Encountered Error While Sending Sms Request"
 	ErrSendingMail       = "Encountered Error While Sending Mail"
@@ -37,8 +38,8 @@ var (
 	tlsconfig *tls.Config
 )
 
-func init() {
-	from = &mail.Address{Name: "EWS-service", Address: From_mail}
+func deprecatedInit() {
+	from = &mail.Address{Name: "Ews mail", Address: From_mail}
 	auth = smtp.PlainAuth("", From_mail, Mail_password, SMTP_Host)
 	tlsconfig = &tls.Config{
 		InsecureSkipVerify: true,

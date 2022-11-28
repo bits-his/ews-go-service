@@ -178,6 +178,32 @@ func GetUserByUserName(username string) (response *GetLikingUsers, err error) {
 	return &resp, nil
 }
 
+func GetUserById(AuthorId int) TweetUser {
+	endpoint := fmt.Sprintf("/users/%d?user.fields=profile_image_url", AuthorId)
+	path := URL + endpoint
+
+	httpClient = cred.GetClientToken()
+	res, err := httpClient.Get(path)
+	if err != nil {
+		log.Println(err)
+	}
+	defer res.Body.Close()
+
+	// decode the response body to a  bytes
+	respByte, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
+	//fmt.Println(string(respByte))
+
+	var user TweetUser
+	if err := json.Unmarshal(respByte, &user); err != nil {
+		log.Printf("error decoding response, %v", err)
+	}
+
+	return user
+}
+
 func RecentTweetSearch(keyword string) {
 
 	//https://api.twitter.com/2/tweets/search/recent?
