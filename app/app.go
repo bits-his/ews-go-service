@@ -49,7 +49,7 @@ func ConsumeAlerts() {
 		nil,
 	)
 	if err != nil {
-		log.Fatalf("Error publishing queue %v", err)
+		log.Fatalf("Error consuming from queue %v", err)
 	}
 	forever := make(chan bool)
 

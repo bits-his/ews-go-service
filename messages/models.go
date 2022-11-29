@@ -12,7 +12,7 @@ var (
 	Sms_endpoint  = "https://www.bulksmsnigeria.com/api/v1/sms/create"
 	From          = "EWS"
 	Gateway       = "0"
-	Append_sender = "EWS"
+	Append_sender = "EWS ALERT DISPATCHER"
 	Api_token     = os.Getenv("SMS_TOKEN")
 
 	From_mail     = os.Getenv("EWS_MAIL")

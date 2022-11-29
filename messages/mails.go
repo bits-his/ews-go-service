@@ -16,6 +16,7 @@ func SendMails(subject, msg string, recipients []string) {
 		go func(recipient string) {
 			defer mailwg.Done()
 			SendMail(subject, msg, recipient)
+			log.Printf("Mail sent to %s, successfully", recipient)
 		}(v)
 	}
 	mailwg.Wait()
@@ -99,7 +100,7 @@ func SendSSLMail(subject, msg string, recipient string) {
 func SendMail(subject, msg string, recipient string) {
 
 	m := gomail.NewMessage()
-	m.SetHeader("From", "Early Warning System <"+From_mail+">")
+	m.SetHeader("From", "EWS ALERT DISPATCHER <"+From_mail+">")
 	m.SetHeader("To", recipient)
 	m.SetHeader("Subject", subject)
 	m.SetBody("text/html", msg)
