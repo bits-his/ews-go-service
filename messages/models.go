@@ -10,14 +10,14 @@ import (
 
 var (
 	Sms_endpoint  = "https://www.bulksmsnigeria.com/api/v1/sms/create"
-	From          = "EWS"
+	From          = "EWS Alerts"
 	Gateway       = "0"
 	Append_sender = "EWS ALERT DISPATCHER"
 	Api_token     = os.Getenv("SMS_TOKEN")
 
-	From_mail     = os.Getenv("EWS_MAIL")
-	Mail_password = os.Getenv("EWS_MAIL_PASSWORD")
-	SMTP_Host     = os.Getenv("EWS_MAIL_HOST")
+	From_mail     = "registrations@drugcipher.com" //os.Getenv("EWS_MAIL")
+	Mail_password = "MrFahad2022"                  //os.Getenv("EWS_MAIL_PASSWORD")
+	SMTP_Host     = "mail.drugcipher.com"          //os.Getenv("EWS_MAIL_HOST")
 
 	ErrSendingSmsRequest = "Encountered Error While Sending Sms Request"
 	ErrSendingMail       = "Encountered Error While Sending Mail"

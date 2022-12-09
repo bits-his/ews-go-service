@@ -21,7 +21,7 @@ func GetUsername() {
 
 func PagePost(text string) {
 
-	res, err := fb.Post("100624668732142/feed",
+	res, err := fb.Post("105641872385914/feed",
 		fb.Params{
 			"message":      text,
 			"access_token": os.Getenv("fb_access"),
