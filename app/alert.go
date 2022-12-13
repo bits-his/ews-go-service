@@ -7,6 +7,7 @@ type Alert struct {
 	Platforms []Platform `json:"platforms"`
 	Urls      []Url      `json:"urls"`
 	Mails     []Mail     `json:"mails"`
+	Phones    []Phone    `json:"phones"`
 }
 
 type Url struct {
@@ -26,6 +27,6 @@ type Platform struct {
 	Name string `json:"name"`
 }
 
-func (alert Alert) Intf(str string) {
-
+type Phone struct {
+	Number string `json:"number"`
 }
