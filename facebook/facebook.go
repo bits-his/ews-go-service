@@ -16,7 +16,7 @@ func GetUsername() {
 	if err != nil {
 		log.Println(err)
 	}
-	fmt.Println("Hello", res["first_name"])
+	fmt.Println("Hello", res)
 }
 
 func PagePost(text string) {

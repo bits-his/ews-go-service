@@ -24,7 +24,7 @@ var (
 func ConsumeAlerts() {
 
 	log.Println("Consumer Application")
-	conn, err := amqp.Dial(os.Getenv("RABBITMQ_URL"))
+	conn, err := amqp.Dial(os.Getenv("RABBITMQ_URI"))
 	if err != nil {
 		log.Fatalf("Error connecting to rabbitMq %v", err)
 	}
@@ -40,7 +40,7 @@ func ConsumeAlerts() {
 	defer ch.Close()
 
 	msgs, err := ch.Consume(
-		"alert_queue",
+		"ews_queue",
 		"",
 		true,
 		false,
@@ -59,7 +59,7 @@ func ConsumeAlerts() {
 
 			var alert Alert
 			if err := json.Unmarshal(d.Body, &alert); err != nil {
-				log.Fatalf("%v", err)
+				log.Printf("%v", err)
 			}
 			CreateAlerts(alert)
 		}
@@ -139,9 +139,10 @@ func ReceiveAlert(c *gin.Context) {
 		mails = append(mails, v.Address)
 	}
 
-	fmt.Println(mails)
+	//fmt.Println(mails)
 
-	messages.SendMails(alert.Headline, alert.Body, mails)
+	//messages.SendMails(alert.Headline, alert.Body, mails)
+	CreateAlerts(alert)
 
 	c.JSON(200, gin.H{
 		"success": "Alerts distributed successfully",
@@ -151,7 +152,7 @@ func ReceiveAlert(c *gin.Context) {
 func CreateAlerts(alert Alert) {
 
 	Platforms := alert.Platforms
-	Urls := alert.Urls
+	//Urls := alert.Urls
 	text := alert.Body
 
 	log.Println(alert.Mails)
@@ -213,7 +214,7 @@ func CreateAlerts(alert Alert) {
 
 	Wg.Wait()
 
-	SendToEndpoints(Urls, text)
+	return
 
 }
 
