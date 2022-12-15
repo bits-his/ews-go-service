@@ -173,10 +173,9 @@ func CreateAlerts(alert Alert) {
 	messages.SendMails(alert.Headline, alert.Body, mails)
 	messages.SendBulkSms(alert.Body, numbers)
 
-	Wg.Add(len(Platforms))
+	//Wg.Add(len(Platforms))
 	for _, v := range Platforms {
 		switch v.Name {
-
 		case "twitter":
 			log.Println("Creating alert on twitter")
 			/*
@@ -185,18 +184,15 @@ func CreateAlerts(alert Alert) {
 					twitter.CreateTweet(text)
 				}(text)
 			*/
-
 		case "facebook":
 			log.Println("Creating alert on facebook")
 			go func(text string) {
-				defer Wg.Done()
 				facebook.PagePost(text)
 			}(text)
 
 		case "telegram":
 			log.Println("Creating alert on telegram")
 			go func(text string) {
-				defer Wg.Done()
 				_, err := telegram.SendChanMsg(text)
 				if err != nil {
 					log.Printf("Error publishing to telegram channel: %v", err)
@@ -206,14 +202,10 @@ func CreateAlerts(alert Alert) {
 		case "whatsapp":
 			log.Println("Creating alert on whatsapp")
 			go func(text string) {
-				defer Wg.Done()
 				facebook.SendMsg()
 			}(text)
 		}
 	}
-
-	Wg.Wait()
-
 	return
 
 }
