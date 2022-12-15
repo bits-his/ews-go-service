@@ -13,6 +13,8 @@ import (
 
 func main() {
 
+	fmt.Printf("The Port %s", os.Getenv("PORT"))
+
 	path, _ := os.Getwd()
 	err := godotenv.Load(filepath.Join(path, ".env"))
 	if err != nil {
