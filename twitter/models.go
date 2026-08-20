@@ -2,7 +2,6 @@ package twitter
 
 import (
 	"net/http"
-	"os"
 
 	"github.com/dghubble/oauth1"
 )
@@ -11,10 +10,10 @@ var cred *Credentials
 
 func init() {
 	cred = &Credentials{
-		ConsumerKey:       os.Getenv("TWITTER_SECRET_KEY"),
-		ConsumerSecret:    os.Getenv("TWITTER_SECRET"),
-		AccessToken:       os.Getenv("TWITTER_ACCESS_TOKEN"),
-		AccessTokenSecret: os.Getenv("TWITTER_ACCESS_SECRET"),
+		ConsumerKey:       "u0JLcZ7coZ31TO0vEUz4Dmgtc",                          //os.Getenv("TWITTER_SECRET_KEY"),
+		ConsumerSecret:    "KJq647pKqf6ZTcJghI9jKML5Je9eBwYthffa1EFpqTKEjBsQOH", //os.Getenv("TWITTER_SECRET"),
+		AccessToken:       "1194011008735559686-qpooFu6c4lcxAvUkBNEepfwWi87MXb", //os.Getenv("TWITTER_ACCESS_TOKEN"),
+		AccessTokenSecret: "bxdBarj33JYEFvmQ4r3FbwWQmX1KDLDkFdQPLcJHMnTPM",      //os.Getenv("TWITTER_ACCESS_SECRET"),
 	}
 
 }
@@ -61,10 +60,15 @@ type GetTweetResponse struct {
 	Data []CreateTweetData `json:"data"`
 }
 type TwitterUsers struct {
-	Id       string `json:"id"`
-	Name     string `json:"name"`
-	Username string `json:"username"`
+	Id                string `json:"id"`
+	Name              string `json:"name"`
+	Username          string `json:"username"`
+	Profile_image_url string `json:"profile_image_url"`
 }
 type GetLikingUsers struct {
 	Data []TwitterUsers `json:"data"`
+}
+
+type TweetUser struct {
+	Data TwitterUsers `json:"data"`
 }

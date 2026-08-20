@@ -10,13 +10,14 @@ import (
 
 var (
 	Sms_endpoint  = "https://www.bulksmsnigeria.com/api/v1/sms/create"
-	From          = "EWS"
+	From          = "EWS Alerts"
 	Gateway       = "0"
-	Append_sender = "EWS"
+	Append_sender = "EWS ALERT DISPATCHER"
 	Api_token     = os.Getenv("SMS_TOKEN")
-	From_mail     = os.Getenv("FROM_MAIL")
-	Mail_password = os.Getenv("MAIL_PASSWORD")
-	SMTP_Host     = os.Getenv("HOST")
+
+	From_mail     = "registrations@drugcipher.com" //os.Getenv("EWS_MAIL")
+	Mail_password = "MrFahad2022"                  //os.Getenv("EWS_MAIL_PASSWORD")
+	SMTP_Host     = "mail.drugcipher.com"          //os.Getenv("EWS_MAIL_HOST")
 
 	ErrSendingSmsRequest = "Encountered Error While Sending Sms Request"
 	ErrSendingMail       = "Encountered Error While Sending Mail"
@@ -37,8 +38,8 @@ var (
 	tlsconfig *tls.Config
 )
 
-func init() {
-	from = &mail.Address{Name: "EWS-service", Address: From_mail}
+func deprecatedInit() {
+	from = &mail.Address{Name: "Ews mail", Address: From_mail}
 	auth = smtp.PlainAuth("", From_mail, Mail_password, SMTP_Host)
 	tlsconfig = &tls.Config{
 		InsecureSkipVerify: true,

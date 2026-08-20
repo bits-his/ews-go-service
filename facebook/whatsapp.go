@@ -37,7 +37,7 @@ func SendMsg() {
 
 	req.Header = http.Header{
 		"Content-Type":  []string{"application/json"},
-		"Authorization": []string{os.Getenv("WHATSAPP_TOKEN")}, //[]string{os.Getenv("META_ACCESS_TOKEN")},
+		"Authorization": []string{os.Getenv("WHATSAPP_TOKEN")},
 	}
 
 	res, err := client.Do(req)

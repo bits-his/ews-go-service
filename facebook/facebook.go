@@ -16,12 +16,12 @@ func GetUsername() {
 	if err != nil {
 		log.Println(err)
 	}
-	fmt.Println("Hello", res["first_name"])
+	fmt.Println("Hello", res)
 }
 
 func PagePost(text string) {
 
-	res, err := fb.Post("100624668732142/feed",
+	res, err := fb.Post("495914330486251/feed",
 		fb.Params{
 			"message":      text,
 			"access_token": os.Getenv("fb_access"),

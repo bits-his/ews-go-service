@@ -6,31 +6,17 @@ import (
 	"log"
 	"net/mail"
 	"net/smtp"
+
+	"gopkg.in/gomail.v2"
 )
-
-func SendMail(msg string, recipient []string) {
-	// Message.
-	message := []byte("This is a test email message.")
-
-	// Authentication.
-	auth := smtp.PlainAuth("", From_mail, Mail_password, SMTP_Host)
-
-	fmt.Println(auth)
-	// Sending email.
-	if err := smtp.SendMail(fmt.Sprintf("%s:%d", SMTP_Host, 465), auth, From_mail, recipient, message); err != nil {
-		log.Printf("Error sending mail %v", err)
-		return
-	}
-
-	log.Println("Email Sent Successfully!")
-}
 
 func SendMails(subject, msg string, recipients []string) {
 	mailwg.Add(len(recipients))
 	for _, v := range recipients {
 		go func(recipient string) {
 			defer mailwg.Done()
-			SendSSLMail(subject, msg, recipient)
+			SendMail(subject, msg, recipient)
+			log.Printf("Mail sent to %s, successfully", recipient)
 		}(v)
 	}
 	mailwg.Wait()
@@ -111,11 +97,16 @@ func SendSSLMail(subject, msg string, recipient string) {
 	}
 }
 
-/*
-	{
-		"headline":"hello",
-		"body": "hello body",
-		"platforms": [{"name":"facebook"}, {"name":"telegram"}],
-		"mails": [{"address":"salemododa2@gmail.com"}, {"address" :"robtyler0701@gmail.com"}]
+func SendMail(subject, msg string, recipient string) {
+
+	m := gomail.NewMessage()
+	m.SetHeader("From", "EWS ALERT DISPATCHER <"+From_mail+">")
+	m.SetHeader("To", recipient)
+	m.SetHeader("Subject", subject)
+	m.SetBody("text/html", msg)
+
+	d := gomail.NewPlainDialer(SMTP_Host, 465, From_mail, Mail_password)
+	if err := d.DialAndSend(m); err != nil {
+		panic(err)
 	}
-*/
+}
